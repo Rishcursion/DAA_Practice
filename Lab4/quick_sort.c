@@ -1,5 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
+
 
 long int ops = 0;
 
@@ -17,12 +19,13 @@ int partition(int *array, int lo, int hi){
   for (int j = lo ; j < hi ; j++)
   {
     if(array[j] < pivot){
+      ops++;
       i++;
       swap(&array[i],&array[j]);
     }
   }
   swap(&array[i+1],&array[hi]);
-  return ++i;
+  return i+1;
 }
 
 void quicksort(int *array,int lo, int hi){
@@ -41,12 +44,44 @@ void print(int * array, int len){
   printf("\n");
 }
 
+void test_case(int times)
+{
+  for(int i =0;i<times;i++){
+    
+    int hrange = 500000, lrange = 0;
+    
+    if(hrange < lrange){
+      int temp = hrange;
+      hrange= lrange;
+      lrange = temp;
+    }
+
+    int size = rand()%(hrange- lrange + 1)+lrange;
+    int array[size];
+
+    for(int j = 0;j<size;j++)
+      array[j] = rand();
+   
+    clock_t start,end;
+    start = clock();
+    quicksort(array,0,size-1);
+    end = clock();
+    printf("\nNo Of Operations: %ld",ops);
+    printf("\nTime taken: %e",(double)(end-start)/CLOCKS_PER_SEC);
+    printf("\nInput Size (N) = %d\n",size);
+    ops = 0;
+  }
+
+}
+
 int main(){
-  int array [] = {10,12,24,2,3,4,14,15};
-  int lo = 0;
-  int hi = 8;
-  print(array, hi);
-  quicksort(array, lo , hi - 1);
-  print(array, hi);
   
+   srand(time(NULL));
+  int times;
+  
+  printf("Enter No Of Test Cases: ");
+  scanf("%d",&times);
+  test_case(times);
+
+  return 1;
 }
